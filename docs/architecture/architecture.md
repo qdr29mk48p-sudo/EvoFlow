@@ -30,3 +30,4 @@ Agent Runtime (LangGraph, Supervisor, Agent Teams)
 - 产品范围与验收：`../product/requirements.md`
 - 技术取舍：`../decisions/ADR-<编号>-<名称>.md`
 - 可执行工作：`../tasks/backlog.md`
+- Cursor 开发代理 V1：`cursor-agent-v1.md`
