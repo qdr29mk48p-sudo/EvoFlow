@@ -1,14 +1,14 @@
-#!/bin/bash
-# EvoPanel å¼åæ¨¡å¼å¯å¨èæ?# ç¨æ³: ./scripts/dev.sh [web|tauri]
-#   web   - ä»å¯å?Vite åç«¯ï¼æµè§å¨è°è¯ï¼mock æ°æ®ï¼?#   tauri - å¯å¨å®æ´ Tauri æ¡é¢åºç¨ï¼é»è®¤ï¼
+#!/usr/bin/env bash
+# EvoPanel development launcher. Usage: ./scripts/dev.sh [web|tauri]
 
-set -e
+set -euo pipefail
+
 cd "$(dirname "$0")/.."
 
 MODE="${1:-tauri}"
 
-# æ¸çæ§è¿ç¨?cleanup() {
-  echo "ð§¹ æ¸çæ§è¿ç¨?.."
+cleanup() {
+  echo "Cleaning up previous EvoPanel development processes..."
   pkill -f "vite.*evopanel" 2>/dev/null || true
   pkill -f "target/debug/evopanel" 2>/dev/null || true
   lsof -ti:1421 | xargs kill -9 2>/dev/null || true
@@ -19,22 +19,17 @@ cleanup
 
 case "$MODE" in
   web)
-    echo "ð å¯å¨ Vite åç«¯å¼åæå¡å¨ï¼æµè§å¨æ¨¡å¼ï¼?.."
-    echo "   å°å: http://localhost:1421"
-    echo "   ä½¿ç¨ mock æ°æ®ï¼éåè°è¯åç«¯é»è¾"
-    echo ""
-    npx vite --port 1421
+    echo "Starting the Vite frontend at http://127.0.0.1:1421"
+    exec npx vite --host 127.0.0.1 --port 1421 --strictPort
     ;;
   tauri)
-    echo "ð¥ï¸? å¯å¨ Tauri æ¡é¢åºç¨ï¼å®æ´æ¨¡å¼ï¼..."
-    echo "   Vite + Rust åç«¯"
-    echo ""
-    npm run tauri dev
+    echo "Starting the EvoFlow Tauri desktop application..."
+    exec npm run tauri dev
     ;;
   *)
-    echo "ç¨æ³: $0 [web|tauri]"
-    echo "  web   - ä»?Vite åç«¯ï¼æµè§å¨è°è¯ï¼?
-    echo "  tauri - Tauri æ¡é¢åºç¨ï¼é»è®¤ï¼"
+    echo "Usage: $0 [web|tauri]" >&2
+    echo "  web   Start only the Vite frontend." >&2
+    echo "  tauri Start the complete Tauri desktop application (default)." >&2
     exit 1
     ;;
 esac
