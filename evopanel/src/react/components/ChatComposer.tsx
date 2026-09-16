@@ -34,6 +34,7 @@ import {
   showVoiceInputOverlay,
 } from '../../lib/background-voice.js'
 import { getMentionAtCursor } from '../lib/workspace-mention.js'
+import { parseCursorTaskMention } from '../lib/cursor-task-mention.js'
 import { measureTextareaCaret } from '../lib/textarea-caret.js'
 import { WorkspaceMentionMenu, type MentionFileOption, type MentionEmployeeOption, type MentionOption, isEmployeeOption } from './WorkspaceMentionMenu.js'
 import {
@@ -216,6 +217,7 @@ export const ChatComposer = memo(function ChatComposer({
   speechEnabled,
   onVoiceTranscribed,
   onDispatchEmployee,
+  onOpenCursorTask,
 }: {
   sessionReady: boolean
   /** False while Gateway Agent/LangGraph is still warming — UI stays browsable. */
@@ -268,6 +270,8 @@ export const ChatComposer = memo(function ChatComposer({
   onAttachContextFiles?: (entries: ComposePathEntry[]) => void
   /** `@员工名 任务` -> 派发任务给员工。命中时不走 onSend，主聊天不产生消息。 */
   onDispatchEmployee?: (agentCode: string, goal: string) => void | Promise<void>
+  /** `@cursor …` -> 打开只读计划任务弹窗。命中时不走 onSend，主聊天不产生消息。 */
+  onOpenCursorTask?: (instructions: string) => void
 }) {
   const [text, setText] = useState(initialDraft)
   const [pendingFiles, setPendingFiles] = useState<File[]>([])
@@ -597,6 +601,18 @@ export const ChatComposer = memo(function ChatComposer({
       return
     }
     if (streaming || sending) return
+
+    // ── @cursor 只读计划任务（主聊天不产生消息；由 ChatApp 打开弹窗）──
+    if (onOpenCursorTask) {
+      const cursorMention = parseCursorTaskMention(t)
+      if (cursorMention) {
+        setTextAndNotify('')
+        setPendingFiles([])
+        closeMention()
+        onOpenCursorTask(cursorMention.taskText)
+        return
+      }
+    }
 
     // ── @员工 任务派发路由（方案 A：主聊天不产生消息） ──────────────
     // 文本以 `@岗位名` 开头且命中已注册员工时，走派发而非普通聊天。

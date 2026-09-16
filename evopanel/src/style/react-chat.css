@@ -15247,6 +15247,81 @@ html.evopanel-tauri .react-chat-subtask-modal-body .msg-ai .msg-bubble {
   display: none;
 }
 
+/* EVO-0006.4 — @cursor developer task modal (hosted by ChatApp) */
+.cursor-dev-task-modal {
+  width: min(560px, calc(100vw - 32px));
+  max-height: min(90vh, 720px);
+}
+.cursor-dev-task-modal__body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.cursor-dev-task-modal__disclaimer {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--warning, #c9a227) 12%, transparent);
+  color: var(--text-secondary);
+  line-height: 1.45;
+}
+.cursor-dev-task-modal__form {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.cursor-dev-task-modal__form .form-label {
+  margin-top: 6px;
+}
+.cursor-dev-task-modal__textarea {
+  resize: none !important;
+  min-height: 0;
+  font-family: inherit;
+  line-height: 1.45;
+}
+.cursor-dev-task-modal__error {
+  color: var(--danger, #c44) !important;
+  margin: 4px 0 0;
+}
+.cursor-dev-task-modal__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
+.cursor-dev-task-modal__plan,
+.cursor-dev-task-modal__events {
+  margin-top: 8px;
+}
+.cursor-dev-task-modal__plan-pre {
+  margin: 6px 0 0;
+  padding: 10px 12px;
+  max-height: 220px;
+  overflow: auto;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--text-primary, #111) 6%, transparent);
+  font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  font-size: 12px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.cursor-dev-task-modal__event-list {
+  margin: 6px 0 0;
+  padding-left: 1.2em;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: var(--font-size-sm, 13px);
+  color: var(--text-secondary);
+}
+.cursor-dev-task-modal__event-kind {
+  display: inline-block;
+  margin-right: 6px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
 /* 设置弹窗：去掉独立顶栏，关闭钮叠在内容区右上（避免「头部空白条」） */
 .react-chat-modal-close--settings-corner {
   position: absolute;

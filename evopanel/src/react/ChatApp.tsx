@@ -122,6 +122,7 @@ import { GoalProposalDock } from './components/GoalProposalDock.js'
 import { SkillPickerModal, type SkillSelection } from './components/SkillPickerModal.js'
 import { ShareSessionModal } from './components/ShareSessionModal.js'
 import { AgentPickerModal } from './components/AgentPickerModal.js'
+import { CursorDeveloperTaskModal } from './components/CursorDeveloperTaskModal.js'
 import { PlanExecConfirm } from './components/PlanExecConfirmDock.js'
 import { ClarificationConfirmDock } from './components/ClarificationConfirmDock.js'
 import type { PlanExecConfirmAnchor } from './components/ToolCallList.js'
@@ -4902,6 +4903,9 @@ export default function ChatApp() {
   /** 技能选择 pill（多选弹窗） */
   const [bottomSkillOpen, setBottomSkillOpen] = useState(false)
   const [shareSessionOpen, setShareSessionOpen] = useState(false)
+  /** `@cursor` 只读计划任务弹窗（EVO-0006.4） */
+  const [cursorDevTaskOpen, setCursorDevTaskOpen] = useState(false)
+  const [cursorDevTaskInstructions, setCursorDevTaskInstructions] = useState('')
   const [skillList, setSkillList] = useState<Array<{ name: string; label: string; description: string; icon: string; enabled?: boolean }>>([])
   const [skillListLoading, setSkillListLoading] = useState(false)
   const [selectedSkills, setSelectedSkills] = useState<SkillSelection[]>([])
@@ -15151,6 +15155,11 @@ export default function ChatApp() {
               void startNewChatWithPresetAgent(code)
             }}
           />
+          <CursorDeveloperTaskModal
+            open={cursorDevTaskOpen}
+            initialInstructions={cursorDevTaskInstructions}
+            onClose={() => setCursorDevTaskOpen(false)}
+          />
           <div
             className={`react-chat-bottom-dock${
               bottomDockHeightPx != null ? ' is-bottom-area-resizable' : ''
@@ -15385,6 +15394,10 @@ export default function ChatApp() {
               speechEnabled={speechEnabled}
               onVoiceTranscribed={speechEnabled ? handleVoiceTranscribed : undefined}
               onDispatchEmployee={handleDispatchEmployee}
+              onOpenCursorTask={(instructions) => {
+                setCursorDevTaskInstructions(String(instructions || ''))
+                setCursorDevTaskOpen(true)
+              }}
               workspaceMention={workspaceMention}
               attachedContextFileCount={contextFiles.length}
               onAttachContextFiles={attachContextFiles}
