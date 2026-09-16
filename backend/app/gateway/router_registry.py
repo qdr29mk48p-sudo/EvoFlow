@@ -86,6 +86,7 @@ def register_core_routers(app: FastAPI) -> None:
     _include_module_router(app, "app.gateway.routers.plans", label="plans")
     _include_module_router(app, "app.gateway.routers.runs", label="runs")
     _include_module_router(app, "app.gateway.routers.developer_agents", label="developer_agents")
+    _include_module_router(app, "app.gateway.routers.developer_tasks", label="developer_tasks")
 
     langgraph_proxy = importlib.import_module("app.gateway.routers.langgraph_proxy")
     app.include_router(langgraph_proxy.router, include_in_schema=False)
