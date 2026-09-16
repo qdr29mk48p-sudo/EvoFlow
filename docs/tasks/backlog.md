@@ -82,3 +82,20 @@
   - [ ] Gateway 与 EvoPanel 改动按职责拆分为独立子任务与 PR，并通过相称的自动化检查。
 - **分支**：先以本规格分支 `docs/EVO-0006-cursor-agent-v1` 评审；实施拆分为 `feature/EVO-0006-<短名称>` 子分支。
 - **关联需求 / ADR**：`PRD-0001`；`ADR-0002-cursor-agent-adapter-v1`
+
+### EVO-0006.2：聊天派发 Cursor 只读计划任务
+
+- **状态**：进行中
+- **优先级**：P1
+- **负责人**：Codex（Gateway 计划任务）+ Cursor（后续聊天 `@cursor` UI）
+- **范围与交付物**：Gateway 接收带 EVO 编号、允许路径和验收标准的 Cursor 计划任务；使用固定只读 CLI 参数与独立 detached worktree 生成脱敏计划；提供创建、查询与取消 API。
+- **影响模块**：Gateway Developer Tasks API、Cursor Adapter、EvoPanel 聊天交互（后续子项）。
+- **依赖与风险**：Cursor CLI 必须通过预检。计划模式不得写入；所有执行/批准/PR 动作明确不在本任务范围内。
+- **验收标准**：
+  - [ ] 不存在已认证 Cursor CLI 时，任务可审计地显示为 `preflight_failed`，不会运行 CLI。
+  - [ ] 计划调用固定使用 `--mode plan` 与 `--sandbox enabled`，且不用 `--force`/`--yolo`。
+  - [ ] 每次计划使用从 `develop` 检出的 detached worktree；发现变更即失败，不能进入批准状态。
+  - [ ] 返回的任务、事件与计划输出不包含 token、密钥或邮箱。
+  - [ ] EvoPanel 的 `@cursor` 输入入口由独立 Cursor 子任务实现，调用此 API 而不运行本机命令。
+- **分支**：`feature/EVO-0006-chat-cursor-tasks`
+- **关联需求 / ADR**：`PRD-0001`；`ADR-0002-cursor-agent-adapter-v1`
