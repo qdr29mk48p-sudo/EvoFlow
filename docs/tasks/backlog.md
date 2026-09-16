@@ -65,3 +65,20 @@
   - [ ] ADR 说明上下文、方案、权衡、后果与回滚路径。
   - [ ] 后端和前端实施任务可据此独立验收。
 - **关联需求 / ADR**：`EVO-0002`
+
+### EVO-0006：Cursor 开发代理接入 V1
+
+- **状态**：待办
+- **优先级**：P1
+- **负责人**：Codex（Gateway、Adapter、隔离执行与测试）+ Cursor（EvoPanel 任务界面）
+- **范围与交付物**：实现本机 Cursor Agent CLI 的预检、规划与批准后隔离执行；新增统一 Developer Agent Adapter 协议、任务状态机、审计事件、任务详情 UI 与测试。
+- **影响模块**：Gateway、任务调度/审计、Git worktree 管理、EvoPanel、自动化测试。
+- **依赖与风险**：依赖 `PRD-0001`、`ADR-0002`、EVO-0004 与 EVO-0005；需要用户本机已安装并认证 Cursor CLI。错误的权限或 worktree 隔离会造成代码/凭据风险，必须通过批准关卡与路径白名单控制。
+- **验收标准**：
+  - [ ] 仅已预检可用的 Cursor CLI 可创建任务；不可用时提供修复提示而不自动安装或泄露凭据。
+  - [ ] 规划任务不产生工作区写入；写入任务未经批准不可执行。
+  - [ ] 每个写入任务仅在从 `develop` 创建的独立分支/worktree 中运行，不能直接变更 `main`、`develop` 或当前 checkout。
+  - [ ] 任务详情含状态、脱敏事件、diff、检查结果和 PR 链接；失败/取消可追踪。
+  - [ ] Gateway 与 EvoPanel 改动按职责拆分为独立子任务与 PR，并通过相称的自动化检查。
+- **分支**：先以本规格分支 `docs/EVO-0006-cursor-agent-v1` 评审；实施拆分为 `feature/EVO-0006-<短名称>` 子分支。
+- **关联需求 / ADR**：`PRD-0001`；`ADR-0002-cursor-agent-adapter-v1`
